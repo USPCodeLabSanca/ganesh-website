@@ -24,7 +24,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.4.10",
     "next": "^15.2.1",
-    "next-auth": "^5.0.0-beta.22",
+    "next-auth": "^5.0.0-beta.29",
     "next-intl": "^3.26.5",
     "postcss": "^8.5.3",
     "prisma": "^6.4.1",
