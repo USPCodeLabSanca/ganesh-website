@@ -1,7 +1,7 @@
 "use client";
 
 import Modal from '@/components/modal';
-import { useActionState } from '@/lib/utils';
+import { useActionState } from '@/lib/utils/hooks';
 import { createSponsor, deleteSponsor, State, updateSponsor } from '@/services/sponsor';
 import { useState } from 'react';
 import ErrorMessages from '../posts/error-messages';
