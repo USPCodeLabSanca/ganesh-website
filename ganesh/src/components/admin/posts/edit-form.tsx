@@ -13,7 +13,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button } from '@/components/button/button';
 import Modal from '@/components/modal';
-import { useActionState } from '@/lib/utils';
+import { useActionState } from '@/lib/utils/hooks';
 import { PostForm, PostTxtContent, postTypes } from '@/models/post';
 import { State, updatePost } from '@/services/post';
 import { Author } from '@/models/author';

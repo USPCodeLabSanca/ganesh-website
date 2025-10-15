@@ -154,5 +154,17 @@
         "answer": "Não podemos prometer nada.. mas quem sabe?"
       }
     ]
+  },
+  "Preview": {
+    "writtenBy": "Written by"
+  },
+  "Date": {
+    "now": "Now",
+    "minuteAgo": "1 minute ago",
+    "minutesAgo": "minutes ago",
+    "hourAgo": "1 hour ago",
+    "hoursAgo": "hours ago",
+    "dayAgo": "1 day ago",
+    "daysAgo": "days ago"
   }
 }
