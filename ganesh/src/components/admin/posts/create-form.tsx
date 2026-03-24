@@ -250,7 +250,7 @@ export default function Form({ authors }: { authors: Author[] }) {
           {/* Date */}
           <div className="mb-4">
             <label htmlFor="date" className="mb-2 block text-sm font-medium">
-              Data de publicação [MM/DD/AAAA, HH:MM]
+              Data de publicação [DD/MM/AAAA, HH:MM]
             </label>
             <div className='relative'>
               <input
