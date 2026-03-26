@@ -1,5 +1,5 @@
 <h1>
-  <img src="/ganesh/public/images/logo/ganesh-logo-coloured.png" width="32" align="absmiddle"> Site do Ganesh
+  <img src="/public/images/logo/ganesh-logo-coloured.png" width="32" align="absmiddle"> Site do Ganesh
 </h1>
 
 Este é o repositório do site do Ganesh, o grupo extracurricular focado em segurança da informação da USP São Carlos.
