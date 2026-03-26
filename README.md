@@ -21,16 +21,14 @@ Este é o repositório do site do Ganesh, o grupo extracurricular focado em segu
 
 ### Como rodar para desenvolvimento?
 
-Rode todos os passos a seguir no diretório `/ganesh`. 
-
 #### Configuração Inicial
 
-1. Duplique o arquivo `.env.example`, renomeie a cópia para `.env` e preencha as variáveis de ambiente necessárias.
-2. Instale as dependências: `npm install`
-3. Sincronize os schemas do projeto: `npx prisma generate`
+1. Instale as dependências: `npm install`
+2. Sincronize os schemas do projeto: `npx prisma generate`
 
-#### Apenas na primeira vez (Setup do Banco)
+#### Apenas na primeira vez
 
+3. Duplique o arquivo `.env.example`, renomeie a cópia para `.env` e preencha as variáveis de ambiente necessárias.
 4. Rode o backend com: `docker compose up -d`
 5. Realize as migrations no Postgres com: `npx prisma migrate dev`
 6. Popule o banco com os dados iniciais: `npx prisma db seed`
