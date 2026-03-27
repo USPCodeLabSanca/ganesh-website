@@ -16,7 +16,7 @@ import { useActionState } from '@/lib/utils/hooks';
 import { postTypes } from '@/models/post';
 import { createPost, State } from '@/services/post';
 import { Author } from '@/models/author';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Preview from '@/components/preview/preview';
 import Modal from '@/components/modal';
 import TxtInput from './txt-input';
@@ -27,16 +27,37 @@ export default function Form({ authors }: { authors: Author[] }) {
   const initialState: State = { message: null, errors: {} };
   const [state, formAction] = useActionState(createPost, initialState);
 
+	const hasSubmitted = useRef(false);
+	
+	useEffect(() => {
+	  if (!hasSubmitted.current) {
+	    if (state?.message !== null || Object.keys(state?.errors ?? {}).length > 0) {
+	      hasSubmitted.current = true;
+	    }
+	    return;
+	  }
+	  if (state?.message === null && Object.keys(state?.errors ?? {}).length === 0) {
+	    setPostContent({
+	      title: "", summary: "", content: "", typeId: "", published: "",
+	      date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
+	    });
+	    hasSubmitted.current = false;
+	  }
+	}, [state]);
+	
   // to open the markdown modal with the content
   const [isMarkdownOpen, setIsMarkdownOpen] = useState(false);
-  const [postTxtContent, setPostTxtContent] = useState({
+  const [postContent, setPostContent] = useState({
     title: "",
     summary: "",
     content: "",
+    typeId: "",
+    published: "",
+    date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
   });
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setPostTxtContent((prevState) => ({ ...prevState, [name]: value }));
+    setPostContent((prevState) => ({ ...prevState, [name]: value }));
   };
 
   // to filter the github usernames
@@ -85,14 +106,18 @@ export default function Form({ authors }: { authors: Author[] }) {
       {isMarkdownOpen && (
         <Modal onRequestClose={() => setIsMarkdownOpen(false)}>
           <Preview
-            title={postTxtContent.title}
+            title={postContent.title}
             authorName='Nome do Autor'
-            date={new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000)}
-            txtContent={postTxtContent.content} />
+            date={new Date(postContent.date)}
+            txtContent={postContent.content} />
         </Modal>
       )}
 
-      <form className='md:mb-16 relative' action={formAction}>
+      <form className='md:mb-16 relative'
+      	onSubmit={(e) => {
+          e.preventDefault();
+          formAction(new FormData(e.currentTarget));
+        }}>
         {/* Preview Button */}
         <button
           type="button"
@@ -111,8 +136,8 @@ export default function Form({ authors }: { authors: Author[] }) {
             name="title"
             rows={1}
             placeholder="Título"
-            value={postTxtContent.title}
-            onChange={handleContentChange}
+            value={postContent.title}
+            onChange={handleChange}
             Icon={BookmarkIcon}
           />
           <ErrorMessages id="title-error" errors={state?.errors?.title} />
@@ -123,8 +148,8 @@ export default function Form({ authors }: { authors: Author[] }) {
             name="summary"
             rows={3}
             placeholder="Resumo do Post"
-            value={postTxtContent.summary}
-            onChange={handleContentChange}
+            value={postContent.summary}
+            onChange={handleChange}
             Icon={Bars4Icon}
           />
           <ErrorMessages id="summary-error" errors={state?.errors?.summary} />
@@ -135,8 +160,8 @@ export default function Form({ authors }: { authors: Author[] }) {
             name="content"
             rows={20}
             placeholder="Conteúdo do Post"
-            value={postTxtContent.content}
-            onChange={handleContentChange}
+            value={postContent.content}
+            onChange={handleChange}
             Icon={BookOpenIcon}
           />
           <ErrorMessages id="content-error" errors={state?.errors?.content} />
@@ -187,7 +212,8 @@ export default function Form({ authors }: { authors: Author[] }) {
                 id="type"
                 name="typeId"
                 className="h-10 peer block w-full cursor-pointer rounded-md border py-2 pl-10 text-sm outline-2 placeholder:text-gray-300 bg-black border-gray-500"
-                defaultValue=""
+                value={postContent.typeId}
+                onChange={handleChange}
                 aria-describedby="type-error"
               >
                 <option value="" disabled>
@@ -217,6 +243,8 @@ export default function Form({ authors }: { authors: Author[] }) {
                     name="published"
                     type="radio"
                     value="false"
+                    checked={postContent.published === "false"}
+                    onChange={handleChange}
                     className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                   />
                   <label
@@ -232,6 +260,8 @@ export default function Form({ authors }: { authors: Author[] }) {
                     name="published"
                     type="radio"
                     value="true"
+                    checked={postContent.published === "true"}
+                    onChange={handleChange}
                     className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                     aria-describedby="status-error"
                   />
@@ -258,7 +288,8 @@ export default function Form({ authors }: { authors: Author[] }) {
                 name="date"
                 type="datetime-local"
                 className="h-10 peer block w-full rounded-md border py-2 pl-10 text-sm outline-2 placeholder:text-gray-300 bg-black border-gray-500"
-                defaultValue={new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)}
+                value={postContent.date}
+                onChange={handleChange}
               />
               <ClockIcon className="hidden md:block pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-300" />
             </div>
