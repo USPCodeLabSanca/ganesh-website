@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
+import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/16/solid';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { generatePagination } from '@/lib/utils/pagination';
@@ -101,20 +101,20 @@ function PaginationArrow({
   isDisabled?: boolean;
 }) {
   const className = clsx(
-    'flex h-10 w-10 items-center justify-center rounded-md border',
+    'flex h-10 w-10 items-center justify-center rounded-md',
     {
-      'pointer-events-none': isDisabled,
-      'bg-white/50 hover:bg-gray-100': !isDisabled,
-      'mr-2 md:mr-4': direction === 'left',
-      'ml-2 md:ml-4': direction === 'right',
+      'pointer-events-none text-white/30': isDisabled,
+      'text-white hover:bg-white/10': !isDisabled,
+      'mr-2': direction === 'left',
+      'ml-2': direction === 'right',
     },
   );
 
   const icon =
     direction === 'left' ? (
-      <ArrowLeftIcon className="w-4" />
+      <ChevronLeftIcon className="w-6" />
     ) : (
-      <ArrowRightIcon className="w-4" />
+      <ChevronRightIcon className="w-6" />
     );
 
   return isDisabled ? (
