@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import Title from "@/components/admin/title";
 
 export default function Page() {
   const session = auth();
@@ -7,8 +8,8 @@ export default function Page() {
   }
   return (
     <div className="w-full md:mb-16">
+      <Title text="Dashboard" />
       <div className="flex flex-col w-full justify-between">
-        <h1 className={`mx-5 mb-10 text-xl md:text-2xl text-neutral-100`}>Dashboard</h1>
         <div className="bg-adminForeground rounded-md">
           <div className="m-5 text-neutral-100 text-xl">Como criar um Post?</div>
           <ol className="m-5 text-neutral-100">

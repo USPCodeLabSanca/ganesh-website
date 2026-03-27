@@ -7,6 +7,9 @@ import { fetchPostsPages } from '@/services/data';
 import type { Metadata } from 'next';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/admin/posts/tabs';
 import { PostType, postTypes } from '@/models/post';
+import Title from '@/components/admin/title';
+import { getTranslations } from 'next-intl/server';
+
 export const metadata: Metadata = {
   title: 'Content',
 };
@@ -27,44 +30,63 @@ export default async function Page({
     postTypes.map((type) => fetchPostsPages(type))
   )
   const absoluteTotalPages = await fetchPostsPages();
+  
+  const translations = await getTranslations('Admin');
+  const tNav = await getTranslations('Navbar');
+
+  const typeMap: Record<string, any> = {
+    'artigo': 'articles',
+    'dica': 'tips',
+    'atividade': 'activities',
+    'notícia': 'news'
+  };
 
   return (
     <div className="w-full md:mb-16 overflow-y-hidden">
-      <div className="flex w-full items-center justify-between">
-        <h1 className={`mx-5 text-xl md:text-2xl text-neutral-100`}>Content</h1>
-      </div>
+      <Title text={translations('content')} />
       <Tabs defaultValue="Todos">
-        <div className="mt-4 flex flex-col md:flex-row items-center justify-between gap-2 md:mt-8">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:mt-8">
           {/* <Search placeholder="Search invoices..." /> */}
           <TabsList>
+            
             <TabsTrigger value="Todos">
-              Todos
+              {tNav('all')}
             </TabsTrigger>
+            
             {postTypes.map((type) => (
               <TabsTrigger key={type} value={type}>
-                {type.charAt(0).toUpperCase() + type.slice(1)}
+                {typeMap[type] ? tNav(typeMap[type]) : type.charAt(0).toUpperCase() + type.slice(1)}
               </TabsTrigger>
             ))}
+            
           </TabsList>
           <CreatePost />
         </div>
+        
         <TabsContent value="Todos">
           <Suspense key={currentPage} fallback={<div />}>
             <Table currentPage={currentPage} />
           </Suspense>
-          <div className="my-5 flex w-full justify-center">
-            <Pagination totalPages={absoluteTotalPages} />
-          </div>
+          
+          {absoluteTotalPages > 1 && (
+            <div className="my-5 flex w-full justify-center">
+              <Pagination totalPages={absoluteTotalPages} />
+            </div>
+          )}
+          
         </TabsContent>
+        
         {postTypes.map((type, index) => {
           return (
             <TabsContent key={type} value={type}>
               <Suspense key={currentPage} fallback={<div />}>
                 <Table currentPage={currentPage} type={type as PostType} />
               </Suspense>
-              <div className="my-5 flex w-full justify-center">
-                <Pagination totalPages={totalPages[index]} />
-              </div>
+              {totalPages[index] > 1 && (
+                <div className="my-5 flex w-full justify-center">
+                  <Pagination totalPages={totalPages[index]} />
+                </div>
+              )}
             </TabsContent>
           );
         })}

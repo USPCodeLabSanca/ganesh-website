@@ -2,6 +2,7 @@ import { UpdatePost, DeletePost } from '@/components/admin/posts/buttons';
 import PostStatus from '@/components/admin/posts/status';
 import { fetchPosts } from '@/services/data';
 import { PostType } from '@/models/post';
+import { getTranslations } from 'next-intl/server';
 
 export default async function PostsTable({
   currentPage,
@@ -11,13 +12,21 @@ export default async function PostsTable({
   type?: PostType;
 }) {
   const posts = await fetchPosts(currentPage, type);
+  const translations = await getTranslations('Admin');
+  const hasNoPosts = !posts || posts.length === 0;
 
   return (
     <div className="mt-6">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-adminForeground p-2 md:pt-0">
           <div className="md:hidden">
-            {posts?.map((post) => (
+            {hasNoPosts ? (
+              <div className="p-10 text-center text-gray-400">
+                <h1 className="text-xl font-medium">{translations('noPostsFound')}</h1>
+                <p className="text-sm mt-1">{translations('tryAdjusting')}</p>
+              </div>
+            ) : (
+              posts.map((post) => (
               <div
                 key={post.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
@@ -47,36 +56,44 @@ export default async function PostsTable({
                   </div>
                 </div>
               </div>
-            ))}
+            )))}
           </div>
           <table className="hidden min-w-full text-gray-100 md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="w-80 px-4 py-5 font-medium sm:pl-6">
-                  Title
+                  {translations('title')}
                 </th>
                 <th scope="col" className="w-96 px-3 py-5 font-medium">
-                  Summary
+                  {translations('summary')}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Type
+                  {translations('type')}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Author
+                  {translations('author')}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Date
+                  {translations('date')}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Status
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
-                  <span className="sr-only">Edit</span>
+                  <span className="sr-only">{translations('edit')}</span>
                 </th>
               </tr>
             </thead>
             <tbody className="bg-adminBackground">
-              {posts?.map((post) => (
+              {hasNoPosts ? (
+                <tr>
+                  <td colSpan={7} className="py-16 text-center text-gray-400">
+                     <h1 className="text-xl font-medium">{translations('noPostsFound')}</h1>
+                     <p className="mt-2 text-sm">{translations('tryAdjusting')}</p>
+                  </td>
+                </tr>
+              ) : (
+                posts.map((post) => (
                 <tr
                   key={post.id}
                   className="border-gray-700 w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
@@ -108,7 +125,7 @@ export default async function PostsTable({
                     </div>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

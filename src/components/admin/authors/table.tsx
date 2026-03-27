@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { fetchAuthorsByPage } from '@/services/data';
 import { UserIcon } from '@heroicons/react/24/outline';
 import { DeleteAuthor, UpdateAuthor } from './buttons';
+import { getTranslations } from 'next-intl/server';
 
 export default async function InvoicesTable({
   currentPage,
@@ -9,13 +10,20 @@ export default async function InvoicesTable({
   currentPage: number;
 }) {
   const authors = await fetchAuthorsByPage(currentPage);
-
+  const translations = await getTranslations('Admin');
+  const hasNoAuthors = !authors || authors.length === 0;
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-adminForeground p-2 md:pt-0">
+          {/* MOBILE LAYOUT */}
           <div className="md:hidden">
-            {authors?.map((author) => (
+            {hasNoAuthors ? (
+              <div className="p-10 text-center text-gray-400">
+                <h1 className="text-xl font-medium">{translations('noAuthorsFound')}</h1>
+              </div>
+            ) : (
+            authors?.map((author) => (
               <div
                 key={author.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
@@ -48,19 +56,21 @@ export default async function InvoicesTable({
                   </div>
                 </div>
               </div>
-            ))}
+            )))}
           </div>
+
+          {/* DESKTOP TABLE */}
           <table className="hidden min-w-full text-gray-100 md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Author
+                  {translations('author')}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Github Username
+                  {translations('githubUsername')}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Number Of Posts
+                  {translations('numberOfPosts')}
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
@@ -68,7 +78,14 @@ export default async function InvoicesTable({
               </tr>
             </thead>
             <tbody className="bg-adminBackground">
-              {authors?.map((author) => (
+              {hasNoAuthors ? (
+                <tr>
+                  <td colSpan={4} className="py-16 text-center text-gray-400">
+                    <h1 className="text-xl font-medium">{translations('noAuthorsFound')}</h1>
+                  </td>
+                </tr>
+              ) : (
+              authors?.map((author) => (
                 <tr
                   key={author.id}
                   className="border-gray-700 w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
@@ -102,7 +119,7 @@ export default async function InvoicesTable({
                     </div>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

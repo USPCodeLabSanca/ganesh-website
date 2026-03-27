@@ -8,6 +8,7 @@ import { PostSchema } from "@/lib/zod";
 import { verifyAndRedirect } from "@/lib/session";
 import translate from 'translate';
 import { PostTxtContent } from "@/models/post";
+import { getLocale } from 'next-intl/server';
 
 translate.engine = 'deepl';
 translate.key = process.env.DEEPL_API_KEY;
@@ -91,8 +92,10 @@ export const createPost = async (prevState: State, formData: FormData): Promise<
     }
   }
 
-  revalidatePath('/br/admin/dashboard/posts');
-  redirect('/br/admin/dashboard/posts');
+  const locale = await getLocale();
+
+  revalidatePath(`/${locale}/admin/dashboard/posts`);
+  redirect(`/${locale}/admin/dashboard/posts`);
 }
 
 export const updatePost = async (prevState: State, formData: FormData, postTxtContent: PostTxtContent, id: string): Promise<State> => {
@@ -157,8 +160,10 @@ export const updatePost = async (prevState: State, formData: FormData, postTxtCo
     }
   }
 
-  revalidatePath('/br/admin/dashboard/posts');
-  redirect('/br/admin/dashboard/posts');
+  const locale = await getLocale();
+  
+  revalidatePath(`/${locale}/admin/dashboard/posts`);
+  redirect(`/${locale}/admin/dashboard/posts`);
 }
 
 export const deletePost = async (id: string) => {
@@ -168,7 +173,8 @@ export const deletePost = async (id: string) => {
     await prisma.post.delete({
       where: { id }
     })
-    revalidatePath('/br/admin/dashboard/posts');
+    const locale = await getLocale(); 
+    revalidatePath(`/${locale}/admin/dashboard/posts`);
     console.log('Deleted post with id:', id);
   } catch (e) {
     console.error(e);

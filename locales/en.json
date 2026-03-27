@@ -166,5 +166,28 @@
     "hoursAgo": "hours ago",
     "dayAgo": "1 day ago",
     "daysAgo": "days ago"
+  },
+  "Admin": {
+    "noPostsFound": "No posts found.",
+    "tryAdjusting": "Try adjusting your filters or create a new post.",
+    "noAuthorsFound": "No authors found.",
+    "content": "Content",
+    "authors": "Authors",
+    "sponsors": "Sponsors",
+    "videos": "Videos",
+    "signOut": "Sign Out",
+    "githubUsername": "GitHub Username",
+    "numberOfPosts": "Number of Posts",
+    "title": "Title",
+    "summary": "Summary",
+    "type": "Type",
+    "author": "Author",
+    "date": "Date",
+    "createPost": "Create Post",
+    "confirmDeletePost": "Are you sure you want to delete this post?",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "dashboard": "Dashboard"
   }
 }

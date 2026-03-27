@@ -9,19 +9,21 @@ import {
 } from '@heroicons/react/24/outline';
 import { usePathname, Link } from '@/i18n/navigation';
 import clsx from 'clsx';
+import { useTranslations } from 'next-intl';
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: 'Dashboard', href: '/admin/dashboard', icon: HomeIcon },
-  { name: 'Content', href: '/admin/dashboard/posts', icon: DocumentDuplicateIcon },
-  { name: 'Videos', href: '/admin/dashboard/videos', icon: PlayIcon },
-  { name: 'Sponsors', href: '/admin/dashboard/sponsors', icon: HandThumbUpIcon },
-  { name: 'Authors', href: '/admin/dashboard/authors', icon: UserGroupIcon },
+  { name: 'dashboard', href: '/admin/dashboard', icon: HomeIcon },
+  { name: 'content', href: '/admin/dashboard/posts', icon: DocumentDuplicateIcon },
+  { name: 'videos', href: '/admin/dashboard/videos', icon: PlayIcon },
+  { name: 'sponsors', href: '/admin/dashboard/sponsors', icon: HandThumbUpIcon },
+  { name: 'authors', href: '/admin/dashboard/authors', icon: UserGroupIcon },
 ];
 
 export default function NavLinks() {
   const pathname = usePathname();
+  const translations = useTranslations('Admin');
   return (
     <>
       {links.map((link) => {
@@ -38,7 +40,7 @@ export default function NavLinks() {
             )}
           >
             <LinkIcon className="w-6" />
-            <p className="hidden xl:block">{link.name}</p>
+            <p className="hidden xl:block">{translations(link.name)}</p>
           </Link>
         );
       })}

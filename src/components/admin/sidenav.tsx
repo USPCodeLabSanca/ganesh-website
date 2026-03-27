@@ -3,8 +3,10 @@ import NavLinks from '../nav-links';
 import { PowerIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { handleSignOut } from '@/services/auth';
+import { useTranslations } from 'next-intl';
 
 export default function SideNav() {
+  const translations = useTranslations('Admin');
   return (
     <div className="flex md:h-screen flex-col px-3 py-4 md:px-2">
       <Link
@@ -24,7 +26,7 @@ export default function SideNav() {
           action={handleSignOut}>
           <button className="cursor-pointer flex w-full grow items-center justify-center gap-2 rounded-md bg-adminForeground p-3 text-sm font-medium text-gray-300 hover:bg-red-900 hover:text-white md:flex-none md:justify-start md:px-3">
             <PowerIcon className="w-6" />
-            <div className="hidden xl:block">Sign Out</div>
+            <div className="hidden xl:block">{translations('signOut')}</div>
           </button>
         </form>
       </div>

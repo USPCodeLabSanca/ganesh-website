@@ -4,32 +4,25 @@ import NextAuth from 'next-auth';
 import { authConfig } from '@/auth.config';
 import createIntlMiddleware from 'next-intl/middleware';
 import { routing } from './i18n/routing';
-import { NextRequest } from 'next/server';
 
-// Create middleware functions for each feature.
-const { auth } = NextAuth(authConfig)
+const { auth } = NextAuth(authConfig);
 const intlMiddleware = createIntlMiddleware(routing);
 
-const authMiddleware = auth((req: any) => {
-  if (!req.auth) {
-    const newUrl = new URL("/admin", req.nextUrl.origin)
-    return Response.redirect(newUrl)
-  }
-})
-
-export default function middleware(req: NextRequest) {
+export default auth((req: any) => {
   const { pathname } = req.nextUrl;
-
   const adminPathnameRegex = /^\/(en|br)?\/admin\/dashboard(\/.*)?$/;
   const isAdminPage = adminPathnameRegex.test(pathname);
 
-  if (!isAdminPage) {
-    return intlMiddleware(req);
-  } else {
-    return (authMiddleware as any)(req);
+  if (isAdminPage && !req.auth) {
+    const locale = pathname.startsWith('/en') ? 'en' : 'br';
+    const newUrl = new URL(`/${locale}/admin`, req.nextUrl.origin);
+    return Response.redirect(newUrl);
   }
-}
+
+  return intlMiddleware(req);
+});
 
 export const config = {
+  // Skip all internal paths and static files
   matcher: ['/((?!api|_next|.*\\..*).*)']
 };
