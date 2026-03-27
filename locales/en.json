@@ -184,6 +184,7 @@
     "author": "Author",
     "date": "Date",
     "createPost": "Create Post",
+    "editPost": "Editar Post",
     "confirmDeletePost": "Are you sure you want to delete this post?",
     "cancel": "Cancel",
     "delete": "Delete",

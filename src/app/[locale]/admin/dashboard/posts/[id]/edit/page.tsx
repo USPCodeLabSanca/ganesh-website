@@ -2,6 +2,7 @@ import Form from '@/components/admin/posts/edit-form';
 import Breadcrumbs from '@/components/admin/breadcrumbs';
 import { fetchAuthors, fetchPostById } from '@/services/data';
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 
 import type { Metadata } from 'next';
 export const metadata: Metadata = {
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const translations = await getTranslations('Admin');
   const [post, authors] = await Promise.all([
     fetchPostById(id),
     fetchAuthors(),
@@ -23,9 +25,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Content', href: '/admin/dashboard/posts' },
+          { label: translations('content'), href: '/admin/dashboard/posts' },
           {
-            label: 'Edit Post',
+            label: translations('editPost'),
             href: `/admin/dashboard/posts/${id}/edit`,
             active: true,
           },
